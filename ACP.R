@@ -13,15 +13,21 @@ if(!require(PCAmixdata)) {
 
 donne<-c(age, volume, frontal_1R,angular_2R,occi_1R,rolandic_1R,hippo_1R,tempo_4R,frontal_1L,angular_2L,occi_1L,rolan_1L,hippo_1L,tempo_4L)
 #res.pca<-PCAmix(X.quali = donnees[,c("Preference_Manuelle","Sexe")],
-#               X.quanti = donnees[,c("Age","Volume_Cerebral","Index_Lateralisation_Hemispherique","Prod_G_Frontal_Inf_Tri_1_R","Prod_G_Angular_2_R","Prod_G_Occipital_Lat_1_R","Prod_G_Rolandic_Oper_1_R","Prod_G_Hippocampus_1_R","Prod_S_Sup_Temporal_4_R","Prod_G_Frontal_Inf_Tri_1_L","Prod_G_Angular_2_L","Prod_G_Occipital_Lat_1_L","Prod_G_Rolandic_Oper_1_L","Prod_G_Hippocampus_1_L","Prod_S_Sup_Temporal_4_L")])
+#               X.quanti = donnees[,c("Age","Volume_Cerebral",
+#                                  "Index_Lateralisation_Hemispherique",
+#                                  "Prod_G_Frontal_Inf_Tri_1_R","Prod_G_Angular_2_R",
+#                                  "Prod_G_Occipital_Lat_1_R","Prod_G_Rolandic_Oper_1_R",
+#                                  "Prod_G_Hippocampus_1_R","Prod_S_Sup_Temporal_4_R",
+#                                  "Prod_G_Frontal_Inf_Tri_1_L","Prod_G_Angular_2_L",
+#                                 "Prod_G_Occipital_Lat_1_L","Prod_G_Rolandic_Oper_1_L",
+                                  #"Prod_G_Hippocampus_1_L","Prod_S_Sup_Temporal_4_L")])
 
 res.pca<-PCAmix(X.quali = donnees[,c("Preference_Manuelle","Sexe")],
                 X.quanti = donnees[,c("Prod_G_Frontal_Inf_Tri_1_R",
                                       "Prod_G_Occipital_Lat_1_R","Prod_G_Rolandic_Oper_1_R",
-                                      "Prod_G_Hippocampus_1_R","Prod_S_Sup_Temporal_4_R",
+                                      "Prod_S_Sup_Temporal_4_R",
                                       "Prod_G_Frontal_Inf_Tri_1_L","Prod_G_Occipital_Lat_1_L",
-                                      "Prod_G_Rolandic_Oper_1_L","Prod_G_Hippocampus_1_L",
-                                      "Prod_S_Sup_Temporal_4_L")])
+                                      "Prod_G_Rolandic_Oper_1_L")])
 
 
 #Choix du nombre d'axes à retenir
@@ -39,7 +45,7 @@ plot(res.pca)
 par(mfrow=c(1,2))
 plot(res,axes=c(1,2),choice="ind",label=FALSE) #graphique des individus
 plot(res.pca,axes=c(1,2),choice="cor") #cercle de corrélations
-plot(res.pca,axes=c(1,2),choice="sqload")
+#plot(res.pca,axes=c(1,2),choice="sqload")
 #on remarque que Prod_G_ROlandic_Oper_1_R et ****_L sont corrélés
 res.pca$ind
 round(res.pca$ind$cos2,digit=3)
