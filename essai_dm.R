@@ -54,6 +54,14 @@ pairs(matYX)
 summary(matYX)
 
 
+#-------------------------
+#========== ACP ==========
+#-------------------------
+
+# variables décorrélées : index, angular_2R, angular_2L, age, preference, volume
+
+
+
 #---------------------------------------------
 #========== Statistique descriptive ==========
 #---------------------------------------------
@@ -96,15 +104,26 @@ plot(frame3)
 # Les variables frontal_1L et index  semblent avoir une moyenne corrélation (4/10)
 
 
+#---------------------------------------------------------------------
+#========== Régression Linéaire Multiple - Toutes Variables ==========
+#---------------------------------------------------------------------
+
+res0 <- lm(frontal_1L~sexe+preference+age+volume+index+frontal_1R+
+           angular_2R+occi_1R+rolandic_1R+hippo_1R+tempo_4R+angular_2L+
+           occi_1L+rolan_1L+hippo_1L+tempo_4L,
+          data=matYX)
+
+summary(res0)
+
+
 
 #--------------------------------------------------
 #========== Régression Linéaire Multiple ==========
 #--------------------------------------------------
 
 
-res <- lm(frontal_1L~frontal_1R+angular_2R+occi_1R+rolandic_1R+hippo_1R+
-          tempo_4R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+sexe+
-          preference+sujet+age+volume+index,
+res <- lm(frontal_1L~frontal_1R+occi_1R+rolandic_1R+hippo_1R+
+          tempo_4R+occi_1L+rolan_1L+hippo_1L+tempo_4L+sexe,
           data=matYX)
 
 summary(res)
@@ -117,16 +136,32 @@ summary(res)
 plot(res$fitted,res$residuals)
 #pas de structure dans les résidus
 
-# residus.stud<-rstudent(res)
-# plot(residus.stud,ylim=c(-3.5,3.5))
-# abline(h=c(-2,0,2),lty=c(2,1,2))
+shapiro.test(res$residuals)
+# W = 0.98213, p-value = 0.003199
+# normalité des résidus
+
+residus.stud<-rstudent(res)
+plot(residus.stud,ylim=c(-3.5,3.5))
+abline(h=c(-2,0,2),lty=c(2,1,2))
+#résidus suivent loi de student
 
 
 
-#------------------------------------------
-#========== Affinement du modèle ==========
-#------------------------------------------
+#----------------------------------------------------
+#========== Affinement du modèle - Etape 1 ==========
+#----------------------------------------------------
 
+drop1(res)
+#occi_1L a la valeur d'AIC la plus faible
 
+res2 <- lm(frontal_1L~frontal_1R+occi_1R+rolandic_1R+hippo_1R+
+             tempo_4R+rolan_1L+hippo_1L+tempo_4L+sexe,
+           data=matYX)
 
+summary(res2)
 
+#----------------------------------------------------
+#========== Affinement du modèle - Etape 2 ==========
+#----------------------------------------------------
+
+drop1(res2)
