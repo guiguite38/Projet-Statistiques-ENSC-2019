@@ -65,7 +65,10 @@ summary(matYX)
 #---------------------------------------------
 #========== Statistique descriptive ==========
 #---------------------------------------------
+
+#!!!!!!!!!!!!!!!!
 #!! A APPROFONDIR
+#!!!!!!!!!!!!!!!!
 
 boxplot(age, main="Etude des participants par age")
 # 50% des sujets dans 22-28 ans
@@ -108,6 +111,7 @@ plot(frame3)
 #========== Régression Linéaire Multiple - Toutes Variables ==========
 #---------------------------------------------------------------------
 
+#on a juste retiré sujet puisque aucun intérêt
 res0 <- lm(frontal_1L~sexe+preference+age+volume+index+frontal_1R+
            angular_2R+occi_1R+rolandic_1R+hippo_1R+tempo_4R+angular_2L+
            occi_1L+rolan_1L+hippo_1L+tempo_4L,
@@ -117,16 +121,16 @@ summary(res0)
 
 
 
-#--------------------------------------------------
-#========== Régression Linéaire Multiple ==========
-#--------------------------------------------------
-
+#-----------------------------------------------------------------------------------
+#========== Régression Linéaire Multiple - Avec sélection des Données ACP ==========
+#-----------------------------------------------------------------------------------
 
 res <- lm(frontal_1L~frontal_1R+occi_1R+rolandic_1R+hippo_1R+
           tempo_4R+occi_1L+rolan_1L+hippo_1L+tempo_4L+sexe,
           data=matYX)
 
 summary(res)
+# Multiple R-squared:  0.4669,	Adjusted R-squared:  0.4444 
 
 
 #---------------------------------------
@@ -147,9 +151,9 @@ abline(h=c(-2,0,2),lty=c(2,1,2))
 
 
 
-#----------------------------------------------------
-#========== Affinement du modèle - Etape 1 ==========
-#----------------------------------------------------
+#-----------------------------------------------------
+#========== Approche critère AIC descendant ==========
+#-----------------------------------------------------
 
 drop1(res)
 #occi_1L a la valeur d'AIC la plus faible
@@ -159,9 +163,93 @@ res2 <- lm(frontal_1L~frontal_1R+occi_1R+rolandic_1R+hippo_1R+
            data=matYX)
 
 summary(res2)
+# Multiple R-squared:  0.4627,	Adjusted R-squared:  0.4425 
 
-#----------------------------------------------------
-#========== Affinement du modèle - Etape 2 ==========
-#----------------------------------------------------
 
 drop1(res2)
+#la ligne <none> a la valeur AIC la plus faible donc on ne peut pas retirer plus de variables
+
+
+
+#----------------------------------------------------
+#========== Approche critère AIC ascendant ==========
+#----------------------------------------------------
+
+# on choisit les variables les plus significatives du modèle AIC
+res3<-lm(frontal_1L~1,data=matYX)
+summary(res3)
+
+add1(res3,~sexe+preference+age+volume+index+angular_2R+occi_1R+
+       hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
+       frontal_1R+rolandic_1R+tempo_4R)
+# On ajoute la variable avec l'AIC le plus faible
+# frontal_1R   1   15.6648 35.584 -480.44
+
+
+res4<-lm(frontal_1L~frontal_1R,data=matYX)
+summary(res4)
+# Multiple R-squared:  0.3057,	Adjusted R-squared:  0.3029 
+
+
+add1(res4,~sexe+preference+age+volume+index+angular_2R+occi_1R+
+       hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
+       frontal_1R+rolandic_1R+tempo_4R)
+# angular_2L avec AIC faible
+# angular_2L   1    2.9789 32.605 -500.21
+
+
+res5<-lm(frontal_1L~frontal_1R+angular_2L,data=matYX)
+summary(res5)
+# Multiple R-squared:  0.3638,	Adjusted R-squared:  0.3586 
+# + 6%
+
+add1(res5,~sexe+preference+age+volume+index+angular_2R+occi_1R+
+       hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
+       frontal_1R+rolandic_1R+tempo_4R)
+# Ajout tempo_4L
+# tempo_4L     1    3.7732 28.832 -528.84
+
+
+res6<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L,data=matYX)
+summary(res6)
+# Multiple R-squared:  0.4374,	Adjusted R-squared:  0.4305 
+# + 7% !!!!!!! ON PEUT S'ARRETER ICI
+
+add1(res6,~sexe+preference+age+volume+index+angular_2R+occi_1R+
+       hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
+       frontal_1R+rolandic_1R+tempo_4R)
+# Ajout index
+# index        1   1.50254 27.329 -540.16
+# !!!!!!!!!!!!!
+# On pourrait aussi étudier séparément les gauchers et les droitiers
+# !!!!!!!!!!!!!
+
+
+res7<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L+index,data=matYX)
+summary(res7)
+# Multiple R-squared:  0.4667,	Adjusted R-squared:  0.458 
+# + 3% !!!!!!! OU ICI ?
+
+add1(res7,~sexe+preference+age+volume+index+angular_2R+occi_1R+
+       hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
+       frontal_1R+rolandic_1R+tempo_4R)
+# Ajout hippo_1L
+# hippo_1L     1   0.79707 26.532 -545.53
+
+
+res8<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L+index+hippo_1L,data=matYX)
+summary(res8)
+# Multiple R-squared:  0.4823,	Adjusted R-squared:  0.4716 
+# + 2%
+
+add1(res8,~sexe+preference+age+volume+index+angular_2R+occi_1R+
+       hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
+       frontal_1R+rolandic_1R+tempo_4R)
+# Ajout hippo_1R
+# hippo_1R     1   0.67964 25.853 -550.00
+
+
+res9<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L+index+hippo_1L+hippo_1R,data=matYX)
+summary(res9)
+# Multiple R-squared:  0.4955,	Adjusted R-squared:  0.483 
+# + 1%
