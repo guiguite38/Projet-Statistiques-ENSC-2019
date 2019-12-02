@@ -51,20 +51,14 @@ matYX <- data.frame(frontal_1L,sexe,preference,sujet,age,volume,index,frontal_1R
                   occi_1L,rolan_1L,hippo_1L,tempo_4L)
 pairs(matYX)
 
-summary(matYX)
 
-
-#-------------------------
-#========== ACP ==========
-#-------------------------
-
-# variables décorrélées : index, angular_2R, angular_2L, age, preference, volume
 
 
 
 #---------------------------------------------
 #========== Statistique descriptive ==========
 #---------------------------------------------
+summary(matYX)
 
 #!!!!!!!!!!!!!!!!
 #!! A APPROFONDIR
@@ -72,6 +66,13 @@ summary(matYX)
 
 boxplot(age, main="Etude des participants par age")
 # 50% des sujets dans 22-28 ans
+
+
+#-------------------------
+#========== ACP ==========
+#-------------------------
+
+# variables décorrélées : index, angular_2R, angular_2L, age, preference, volume
 
 
 
@@ -253,3 +254,26 @@ res9<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L+index+hippo_1L+hippo_1R,data=
 summary(res9)
 # Multiple R-squared:  0.4955,	Adjusted R-squared:  0.483 
 # + 1%
+
+#----------------------------------------------------
+#========== Séparation Homme/Femme ==================
+#----------------------------------------------------
+if(!require(tidyverse)) {
+        install.packages(("tidyverse"))
+        library(tidyverse)
+}
+
+
+dataHomme <- filter(essai,sexe == "H")
+dataHomme
+
+dataFemme <-filter(essai,sexe=="F")
+dataFemme
+
+#----------------------------------------------------
+#========== Séparation Droitier/Gaucher =============
+#----------------------------------------------------
+dataDoitier <- filter(essai, preference =="R")
+dataDoitier
+dataGaucher <-filter(essai,preference =="G")
+dataGaucher
