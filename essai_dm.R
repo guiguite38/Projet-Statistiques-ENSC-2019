@@ -75,6 +75,11 @@ boxplot(age, main="Etude des participants par age")
 
 
 
+#--------------------------------------------------
+#========== Observation des corrélations ==========
+#--------------------------------------------------
+
+
 #frame1 ----------------------------------------------------------------------
 frame1 <- data.frame(frontal_1L,angular_2L,occi_1L,rolan_1L,hippo_1L,tempo_4L)
 head(frame1)
@@ -105,6 +110,7 @@ summary(frame3)
 plot(frame3)
 
 # Les variables frontal_1L et index  semblent avoir une moyenne corrélation (4/10)
+
 
 
 #---------------------------------------------------------------------
@@ -155,6 +161,8 @@ abline(h=c(-2,0,2),lty=c(2,1,2))
 #========== Approche critère AIC descendant ==========
 #-----------------------------------------------------
 
+#--------------------- Etape 1 ----------------------
+
 drop1(res)
 #occi_1L a la valeur d'AIC la plus faible
 
@@ -166,6 +174,8 @@ summary(res2)
 # Multiple R-squared:  0.4627,	Adjusted R-squared:  0.4425 
 
 
+#--------------------- Etape 2 ----------------------
+
 drop1(res2)
 #la ligne <none> a la valeur AIC la plus faible donc on ne peut pas retirer plus de variables
 
@@ -175,9 +185,13 @@ drop1(res2)
 #========== Approche critère AIC ascendant ==========
 #----------------------------------------------------
 
+
 # on choisit les variables les plus significatives du modèle AIC
 res3<-lm(frontal_1L~1,data=matYX)
 summary(res3)
+
+
+#--------------------- Etape 1 ----------------------
 
 add1(res3,~sexe+preference+age+volume+index+angular_2R+occi_1R+
        hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
@@ -185,11 +199,12 @@ add1(res3,~sexe+preference+age+volume+index+angular_2R+occi_1R+
 # On ajoute la variable avec l'AIC le plus faible
 # frontal_1R   1   15.6648 35.584 -480.44
 
-
 res4<-lm(frontal_1L~frontal_1R,data=matYX)
 summary(res4)
 # Multiple R-squared:  0.3057,	Adjusted R-squared:  0.3029 
 
+
+#--------------------- Etape 2 ----------------------
 
 add1(res4,~sexe+preference+age+volume+index+angular_2R+occi_1R+
        hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
@@ -197,11 +212,13 @@ add1(res4,~sexe+preference+age+volume+index+angular_2R+occi_1R+
 # angular_2L avec AIC faible
 # angular_2L   1    2.9789 32.605 -500.21
 
-
 res5<-lm(frontal_1L~frontal_1R+angular_2L,data=matYX)
 summary(res5)
 # Multiple R-squared:  0.3638,	Adjusted R-squared:  0.3586 
 # + 6%
+
+
+#--------------------- Etape 3 ----------------------
 
 add1(res5,~sexe+preference+age+volume+index+angular_2R+occi_1R+
        hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
@@ -209,11 +226,13 @@ add1(res5,~sexe+preference+age+volume+index+angular_2R+occi_1R+
 # Ajout tempo_4L
 # tempo_4L     1    3.7732 28.832 -528.84
 
-
 res6<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L,data=matYX)
 summary(res6)
 # Multiple R-squared:  0.4374,	Adjusted R-squared:  0.4305 
-# + 7% !!!!!!! ON PEUT S'ARRETER ICI
+# + 7%
+
+
+#--------------------- Etape 4 ----------------------
 
 add1(res6,~sexe+preference+age+volume+index+angular_2R+occi_1R+
        hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
@@ -224,11 +243,15 @@ add1(res6,~sexe+preference+age+volume+index+angular_2R+occi_1R+
 # On pourrait aussi étudier séparément les gauchers et les droitiers
 # !!!!!!!!!!!!!
 
-
 res7<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L+index,data=matYX)
 summary(res7)
 # Multiple R-squared:  0.4667,	Adjusted R-squared:  0.458 
-# + 3% !!!!!!! OU ICI ?
+# + 3%
+# ON PREND LE PARTI DE S'ARRETER ICI, L'AJOUT DE VARIABLE N'INDUIT PLUS DE
+# CHANGEMENT SIGNIFICATIF
+
+
+#--------------------- Etape 5 ----------------------
 
 add1(res7,~sexe+preference+age+volume+index+angular_2R+occi_1R+
        hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
@@ -236,11 +259,13 @@ add1(res7,~sexe+preference+age+volume+index+angular_2R+occi_1R+
 # Ajout hippo_1L
 # hippo_1L     1   0.79707 26.532 -545.53
 
-
 res8<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L+index+hippo_1L,data=matYX)
 summary(res8)
 # Multiple R-squared:  0.4823,	Adjusted R-squared:  0.4716 
 # + 2%
+
+
+#--------------------- Etape 6 ----------------------
 
 add1(res8,~sexe+preference+age+volume+index+angular_2R+occi_1R+
        hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
@@ -248,8 +273,31 @@ add1(res8,~sexe+preference+age+volume+index+angular_2R+occi_1R+
 # Ajout hippo_1R
 # hippo_1R     1   0.67964 25.853 -550.00
 
-
 res9<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L+index+hippo_1L+hippo_1R,data=matYX)
 summary(res9)
 # Multiple R-squared:  0.4955,	Adjusted R-squared:  0.483 
 # + 1%
+
+
+
+#---------------------------------------------------
+#========== Approche critère AIC stepwise ==========
+#---------------------------------------------------
+
+
+# on choisit les variables les plus significatives du modèle AIC
+res3<-lm(frontal_1L~1,data=matYX)
+summary(res3)
+
+
+#--------------------- Etape 1 ----------------------
+
+add1(res3,~sexe+preference+age+volume+index+angular_2R+occi_1R+
+             hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
+             frontal_1R+rolandic_1R+tempo_4R)
+# On ajoute la variable avec l'AIC le plus faible
+# frontal_1R   1   15.6648 35.584 -480.44
+
+res4<-lm(frontal_1L~frontal_1R,data=matYX)
+summary(res4)
+# Multiple R-squared:  0.3057,	Adjusted R-squared:  0.3029
