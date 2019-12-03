@@ -2,13 +2,13 @@
 #================================================================
 #===================== Etude statistique ========================
 #========================= ENSC 2019 ============================
-#=== Par Leatitia Calice, Guillaume Grosse et Céline Lemoigne ===
+#=== Par Leatitia Calice, Guillaume Grosse et Cï¿½line Lemoigne ===
 #================================================================
 #----------------------------------------------------------------
 
 
 #------------------------------------------------------------------------------
-#========== Préparation de l'environnement de travail et des données ==========
+#========== Prï¿½paration de l'environnement de travail et des donnï¿½es ==========
 #------------------------------------------------------------------------------
 
 path<-("./activation2020.Rdata")
@@ -17,7 +17,7 @@ head(essai)
 dim(essai)
 
 
-# Objet de l'étude !
+# Objet de l'ï¿½tude !
 frontal_1L<-essai$Prod_G_Frontal_Inf_Tri_1_L
 
 # variables explicatives potentielles
@@ -51,20 +51,14 @@ matYX <- data.frame(frontal_1L,sexe,preference,sujet,age,volume,index,frontal_1R
                   occi_1L,rolan_1L,hippo_1L,tempo_4L)
 pairs(matYX)
 
-summary(matYX)
 
-
-#-------------------------
-#========== ACP ==========
-#-------------------------
-
-# variables décorrélées : index, angular_2R, angular_2L, age, preference, volume
 
 
 
 #---------------------------------------------
 #========== Statistique descriptive ==========
 #---------------------------------------------
+summary(matYX)
 
 #!!!!!!!!!!!!!!!!
 #!! A APPROFONDIR
@@ -74,9 +68,16 @@ boxplot(age, main="Etude des participants par age")
 # 50% des sujets dans 22-28 ans
 
 
+#-------------------------
+#========== ACP ==========
+#-------------------------
+
+# variables dï¿½corrï¿½lï¿½es : index, angular_2R, angular_2L, age, preference, volume
+
+
 
 #--------------------------------------------------
-#========== Observation des corrélations ==========
+#========== Observation des corrï¿½lations ==========
 #--------------------------------------------------
 
 
@@ -86,9 +87,9 @@ head(frame1)
 summary(frame1)
 plot(frame1)
 
-# Les variables frontal_1L et tempo_4L   semblent avoir une bonne corrélation (7/10)
-# Les variables frontal_1L et angular_2L semblent avoir une faible corrélation (3/10)
-# Les variables frontal_1L et hippo_1L   semblent avoir une faible corrélation (3/10)
+# Les variables frontal_1L et tempo_4L   semblent avoir une bonne corrï¿½lation (7/10)
+# Les variables frontal_1L et angular_2L semblent avoir une faible corrï¿½lation (3/10)
+# Les variables frontal_1L et hippo_1L   semblent avoir une faible corrï¿½lation (3/10)
 
 
 #frame2 ----------------------------------------------------------------------
@@ -97,10 +98,10 @@ head(frame2)
 summary(frame2)
 plot(frame2)
 
-# Les variables frontal_1L et frontal_1R  semblent avoir une forte corrélation (9/10)
-# Les variables frontal_1L et rolandic_1R  semblent avoir une moyenne corrélation (5/10)
-# Les variables frontal_1L et occi_1R     semblent avoir une faible corrélation (3/10)
-# Les variables frontal_1L et hippo_1R    semblent avoir une faible corrélation (3/10)
+# Les variables frontal_1L et frontal_1R  semblent avoir une forte corrï¿½lation (9/10)
+# Les variables frontal_1L et rolandic_1R  semblent avoir une moyenne corrï¿½lation (5/10)
+# Les variables frontal_1L et occi_1R     semblent avoir une faible corrï¿½lation (3/10)
+# Les variables frontal_1L et hippo_1R    semblent avoir une faible corrï¿½lation (3/10)
 
 
 #frame3 ----------------------------------------------------------------------
@@ -109,15 +110,15 @@ head(frame3)
 summary(frame3)
 plot(frame3)
 
-# Les variables frontal_1L et index  semblent avoir une moyenne corrélation (4/10)
+# Les variables frontal_1L et index  semblent avoir une moyenne corrï¿½lation (4/10)
 
 
 
 #---------------------------------------------------------------------
-#========== Régression Linéaire Multiple - Toutes Variables ==========
+#========== Rï¿½gression Linï¿½aire Multiple - Toutes Variables ==========
 #---------------------------------------------------------------------
 
-#on a juste retiré sujet puisque aucun intérêt
+#on a juste retirï¿½ sujet puisque aucun intï¿½rï¿½t
 res0 <- lm(frontal_1L~sexe+preference+age+volume+index+frontal_1R+
            angular_2R+occi_1R+rolandic_1R+hippo_1R+tempo_4R+angular_2L+
            occi_1L+rolan_1L+hippo_1L+tempo_4L,
@@ -128,7 +129,7 @@ summary(res0)
 
 
 #-----------------------------------------------------------------------------------
-#========== Régression Linéaire Multiple - Avec sélection des Données ACP ==========
+#========== Rï¿½gression Linï¿½aire Multiple - Avec sï¿½lection des Donnï¿½es ACP ==========
 #-----------------------------------------------------------------------------------
 
 res <- lm(frontal_1L~frontal_1R+occi_1R+rolandic_1R+hippo_1R+
@@ -140,25 +141,25 @@ summary(res)
 
 
 #---------------------------------------
-#========== Etude des résidus ==========
+#========== Etude des rï¿½sidus ==========
 #---------------------------------------
 
 plot(res$fitted,res$residuals)
-#pas de structure dans les résidus
+#pas de structure dans les rï¿½sidus
 
 shapiro.test(res$residuals)
 # W = 0.98213, p-value = 0.003199
-# normalité des résidus
+# normalitï¿½ des rï¿½sidus
 
 residus.stud<-rstudent(res)
 plot(residus.stud,ylim=c(-3.5,3.5))
 abline(h=c(-2,0,2),lty=c(2,1,2))
-#résidus suivent loi de student
+#rï¿½sidus suivent loi de student
 
 
 
 #-----------------------------------------------------
-#========== Approche critère AIC descendant ==========
+#========== Approche critï¿½re AIC descendant ==========
 #-----------------------------------------------------
 
 #--------------------- Etape 1 ----------------------
@@ -182,11 +183,11 @@ drop1(res2)
 
 
 #----------------------------------------------------
-#========== Approche critère AIC ascendant ==========
+#========== Approche critï¿½re AIC ascendant ==========
 #----------------------------------------------------
 
 
-# on choisit les variables les plus significatives du modèle AIC
+# on choisit les variables les plus significatives du modï¿½le AIC
 res3<-lm(frontal_1L~1,data=matYX)
 summary(res3)
 
@@ -240,7 +241,7 @@ add1(res6,~sexe+preference+age+volume+index+angular_2R+occi_1R+
 # Ajout index
 # index        1   1.50254 27.329 -540.16
 # !!!!!!!!!!!!!
-# On pourrait aussi étudier séparément les gauchers et les droitiers
+# On pourrait aussi ï¿½tudier sï¿½parï¿½ment les gauchers et les droitiers
 # !!!!!!!!!!!!!
 
 res7<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L+index,data=matYX)
@@ -281,11 +282,11 @@ summary(res9)
 
 
 #---------------------------------------------------
-#========== Approche critère AIC stepwise ==========
+#========== Approche critï¿½re AIC stepwise ==========
 #---------------------------------------------------
 
 
-# on choisit les variables les plus significatives du modèle AIC
+# on choisit les variables les plus significatives du modï¿½le AIC
 res3<-lm(frontal_1L~1,data=matYX)
 summary(res3)
 
@@ -301,3 +302,25 @@ add1(res3,~sexe+preference+age+volume+index+angular_2R+occi_1R+
 res4<-lm(frontal_1L~frontal_1R,data=matYX)
 summary(res4)
 # Multiple R-squared:  0.3057,	Adjusted R-squared:  0.3029
+#----------------------------------------------------
+#========== Sï¿½paration Homme/Femme ==================
+#----------------------------------------------------
+if(!require(tidyverse)) {
+        install.packages(("tidyverse"))
+        library(tidyverse)
+}
+
+
+dataHomme <- filter(essai,sexe == "H")
+dataHomme
+
+dataFemme <-filter(essai,sexe=="F")
+dataFemme
+
+#----------------------------------------------------
+#========== Sï¿½paration Droitier/Gaucher =============
+#----------------------------------------------------
+dataDoitier <- filter(essai, preference =="R")
+dataDoitier
+dataGaucher <-filter(essai,preference =="G")
+dataGaucher
