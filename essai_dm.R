@@ -289,7 +289,7 @@ abline(h=c(-2,0,2),lty=c(2,1,2))
 #on a bine 95?% des valeurs dans [-2,2]
 
 shapiro.test(resAsc5$residuals)
-#on ne peut pas exclure l'hypothèse de normalité
+# on exclut l'hypothèse de normalité
 
 
 
