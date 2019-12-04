@@ -11,8 +11,9 @@
 #========== Préparation de l'environnement de travail et des données ==========
 #------------------------------------------------------------------------------
 
-path<-("./activation2020.Rdata")
-essai<-readRDS(path)
+#penser à se mettre dans le bon Working Directory !!!
+path <- ('activation2020.Rdata')
+essai <- readRDS(path)
 head(essai)
 dim(essai)
 
@@ -38,6 +39,7 @@ occi_1L<-essai$Prod_G_Occipital_Lat_1_L
 rolan_1L<-essai$Prod_G_Rolandic_Oper_1_L
 hippo_1L<-essai$Prod_G_Hippocampus_1_L
 tempo_4L<-essai$Prod_S_Sup_Temporal_4_L
+
 
 
 
@@ -159,7 +161,7 @@ abline(h=c(-2,0,2),lty=c(2,1,2))
 
 
 #-----------------------------------------------------
-#========== Approche critére AIC descendant ==========
+#========== Approche critère AIC descendant ==========
 #-----------------------------------------------------
 
 #--------------------- Etape 1 ----------------------
@@ -167,141 +169,251 @@ abline(h=c(-2,0,2),lty=c(2,1,2))
 drop1(res)
 #occi_1L a la valeur d'AIC la plus faible
 
-res2 <- lm(frontal_1L~frontal_1R+occi_1R+rolandic_1R+hippo_1R+
+resDes2 <- lm(frontal_1L~frontal_1R+occi_1R+rolandic_1R+hippo_1R+
              tempo_4R+rolan_1L+hippo_1L+tempo_4L+sexe,
            data=matYX)
 
-summary(res2)
+summary(resDes2)
 # Multiple R-squared:  0.4627,	Adjusted R-squared:  0.4425 
 
 
 #--------------------- Etape 2 ----------------------
 
-drop1(res2)
+drop1(resDes2)
 #la ligne <none> a la valeur AIC la plus faible donc on ne peut pas retirer plus de variables
 
 
 
 #----------------------------------------------------
-#========== Approche critére AIC ascendant ==========
+#========== Approche critère AIC ascendant ==========
 #----------------------------------------------------
 
 
-# on choisit les variables les plus significatives du modéle AIC
-res3<-lm(frontal_1L~1,data=matYX)
-summary(res3)
+# on choisit les variables les plus significatives du modèle AIC
+resAsc1<-lm(frontal_1L~1,data=matYX)
+summary(resAsc1)
 
 
 #--------------------- Etape 1 ----------------------
 
-add1(res3,~sexe+preference+age+volume+index+angular_2R+occi_1R+
+add1(resAsc1,~sexe+preference+age+volume+index+angular_2R+occi_1R+
        hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
        frontal_1R+rolandic_1R+tempo_4R)
 # On ajoute la variable avec l'AIC le plus faible
 # frontal_1R   1   15.6648 35.584 -480.44
 
-res4<-lm(frontal_1L~frontal_1R,data=matYX)
-summary(res4)
+resAsc2<-lm(frontal_1L~frontal_1R,data=matYX)
+summary(resAsc2)
 # Multiple R-squared:  0.3057,	Adjusted R-squared:  0.3029 
 
 
 #--------------------- Etape 2 ----------------------
 
-add1(res4,~sexe+preference+age+volume+index+angular_2R+occi_1R+
+add1(resAsc2,~sexe+preference+age+volume+index+angular_2R+occi_1R+
        hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
        frontal_1R+rolandic_1R+tempo_4R)
-# angular_2L avec AIC faible
-# angular_2L   1    2.9789 32.605 -500.21
+# tempo_4L avec AIC faible
+# tempo_4L     1    4.5468 31.037 -512.48
 
-res5<-lm(frontal_1L~frontal_1R+angular_2L,data=matYX)
-summary(res5)
-# Multiple R-squared:  0.3638,	Adjusted R-squared:  0.3586 
-# + 6%
+resAsc3<-lm(frontal_1L~frontal_1R+tempo_4L,data=matYX)
+summary(resAsc3)
+# Multiple R-squared:  0.3944,	Adjusted R-squared:  0.3895 
+# + 9%
 
 
 #--------------------- Etape 3 ----------------------
 
-add1(res5,~sexe+preference+age+volume+index+angular_2R+occi_1R+
+add1(resAsc3,~sexe+preference+age+volume+index+angular_2R+occi_1R+
        hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
        frontal_1R+rolandic_1R+tempo_4R)
-# Ajout tempo_4L
-# tempo_4L     1    3.7732 28.832 -528.84
+# Ajout angular_2L
+# angular_2L   1   2.20536 28.832 -528.84
 
-res6<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L,data=matYX)
-summary(res6)
+resAsc4<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L,data=matYX)
+summary(resAsc4)
 # Multiple R-squared:  0.4374,	Adjusted R-squared:  0.4305 
-# + 7%
+# + 4%
 
 
 #--------------------- Etape 4 ----------------------
 
-add1(res6,~sexe+preference+age+volume+index+angular_2R+occi_1R+
+add1(resAsc4,~sexe+preference+age+volume+index+angular_2R+occi_1R+
        hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
        frontal_1R+rolandic_1R+tempo_4R)
 # Ajout index
 # index        1   1.50254 27.329 -540.16
-# !!!!!!!!!!!!!
-# On pourrait aussi étudier séparément les gauchers et les droitiers
-# !!!!!!!!!!!!!
 
-res7<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L+index,data=matYX)
-summary(res7)
+resAsc5<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L+index,data=matYX)
+summary(resAsc5)
 # Multiple R-squared:  0.4667,	Adjusted R-squared:  0.458 
 # + 3%
+
+#-------------------------------------------------------------------------
 # ON PREND LE PARTI DE S'ARRETER ICI, L'AJOUT DE VARIABLE N'INDUIT PLUS DE
 # CHANGEMENT SIGNIFICATIF
+#-------------------------------------------------------------------------
 
 
 #--------------------- Etape 5 ----------------------
 
-add1(res7,~sexe+preference+age+volume+index+angular_2R+occi_1R+
+add1(resAsc5,~sexe+preference+age+volume+index+angular_2R+occi_1R+
        hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
        frontal_1R+rolandic_1R+tempo_4R)
 # Ajout hippo_1L
 # hippo_1L     1   0.79707 26.532 -545.53
 
-res8<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L+index+hippo_1L,data=matYX)
-summary(res8)
+resAsc6<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L+index+hippo_1L,data=matYX)
+summary(resAsc6)
 # Multiple R-squared:  0.4823,	Adjusted R-squared:  0.4716 
 # + 2%
 
 
 #--------------------- Etape 6 ----------------------
 
-add1(res8,~sexe+preference+age+volume+index+angular_2R+occi_1R+
+add1(resAsc6,~sexe+preference+age+volume+index+angular_2R+occi_1R+
        hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
        frontal_1R+rolandic_1R+tempo_4R)
 # Ajout hippo_1R
 # hippo_1R     1   0.67964 25.853 -550.00
 
-res9<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L+index+hippo_1L+hippo_1R,data=matYX)
-summary(res9)
+resAsc7<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L+index+hippo_1L+hippo_1R,data=matYX)
+summary(resAsc7)
 # Multiple R-squared:  0.4955,	Adjusted R-squared:  0.483 
 # + 1%
 
 
 
-#---------------------------------------------------
-#========== Approche critére AIC stepwise ==========
-#---------------------------------------------------
+residus.stud <- rstudent(resAsc5)
+plot(residus.stud,ylim=c(-3.5,3.5))
+abline(h=c(-2,0,2),lty=c(2,1,2))
+#on a bine 95?% des valeurs dans [-2,2]
+
+shapiro.test(resAsc5$residuals)
+#on ne peut pas exclure l'hypothèse de normalité
 
 
-# on choisit les variables les plus significatives du modéle AIC
-res3<-lm(frontal_1L~1,data=matYX)
-summary(res3)
+
+#---------------------------------------------------
+#========== Approche critère AIC stepwise ==========
+#---------------------------------------------------
+#N'apporte strictement rien puisqu'on ne peut jamais vraiment enlever de variable ...
+
+# on choisit les variables les plus significatives du modèle AIC
+resStep1<-lm(frontal_1L~1,data=matYX)
+summary(resStep1)
 
 
 #--------------------- Etape 1 ----------------------
 
-add1(res3,~sexe+preference+age+volume+index+angular_2R+occi_1R+
+add1(resStep1,~sexe+preference+age+volume+index+angular_2R+occi_1R+
              hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
              frontal_1R+rolandic_1R+tempo_4R)
 # On ajoute la variable avec l'AIC le plus faible
 # frontal_1R   1   15.6648 35.584 -480.44
 
-res4<-lm(frontal_1L~frontal_1R,data=matYX)
-summary(res4)
+resStep2<-lm(frontal_1L~frontal_1R,data=matYX)
+summary(resStep2)
 # Multiple R-squared:  0.3057,	Adjusted R-squared:  0.3029
+
+
+drop1(resStep2)
+#rien à drop
+
+
+#--------------------- Etape 2 ----------------------
+
+add1(resStep2,~sexe+preference+age+volume+index+angular_2R+occi_1R+
+             hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
+             frontal_1R+rolandic_1R+tempo_4R)
+# angular_2L avec AIC faible
+# angular_2L   1    2.9789 32.605 -500.21
+
+resStep3<-lm(frontal_1L~frontal_1R+angular_2L,data=matYX)
+summary(resStep3)
+# Multiple R-squared:  0.3638,	Adjusted R-squared:  0.3586 
+# +6%
+
+drop1(resStep3)
+#rien à drop
+
+
+#--------------------- Etape 3 ----------------------
+
+add1(resStep3,~sexe+preference+age+volume+index+angular_2R+occi_1R+
+             hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
+             frontal_1R+rolandic_1R+tempo_4R)
+# tempo_4L avec AIC faible
+# tempo_4L     1    3.7732 28.832 -528.84
+
+resStep4<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L,data=matYX)
+summary(resStep4)
+# Multiple R-squared:  0.4374,	Adjusted R-squared:  0.4305 
+# + 9%
+
+drop1(resStep4)
+#rien à drop
+
+
+
+#--------------------- Etape 4 ----------------------
+
+add1(resStep4,~sexe+preference+age+volume+index+angular_2R+occi_1R+
+             hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
+             frontal_1R+rolandic_1R+tempo_4R)
+# Ajout index
+# index        1   1.50254 27.329 -540.16
+
+resStep5<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L+index,data=matYX)
+summary(resStep5)
+# Multiple R-squared:  0.4667,	Adjusted R-squared:  0.458 
+# + 3%
+
+drop1(resStep5)
+#rien à drop
+
+
+
+#--------------------- Etape 5 ----------------------
+
+add1(resStep5,~sexe+preference+age+volume+index+angular_2R+occi_1R+
+             hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
+             frontal_1R+rolandic_1R+tempo_4R)
+# Ajout index
+# hippo_1L     1   0.79707 26.532 -545.53
+
+resStep6<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L+index+hippo_1L,data=matYX)
+summary(resStep6)
+# Multiple R-squared:  0.4823,	Adjusted R-squared:  0.4716
+# + 2%
+
+drop1(resStep6)
+#rien à drop
+
+
+#--------------------- Etape 7 ----------------------
+
+add1(resStep6,~sexe+preference+age+volume+index+angular_2R+occi_1R+
+             hippo_1R+angular_2L+occi_1L+rolan_1L+hippo_1L+tempo_4L+
+             frontal_1R+rolandic_1R+tempo_4R)
+# Ajout hippo_1R
+# hippo_1R     1   0.67964 25.853 -550.00
+
+
+resStep7<-lm(frontal_1L~frontal_1R+angular_2L+tempo_4L+index+hippo_1L+hippo_1R,data=matYX)
+summary(resStep7)
+# Multiple R-squared:  0.4955,	Adjusted R-squared:  0.483 
+# + 1.5%
+
+drop1(resStep7)
+#rien à drop
+
+#DEVANT L'ABSCENCE DE RESULTATS SIGNIFICATIFs PAR RAPPORT A AIC ASCENDANT ON ABANDONNE LA.
+
+#on verifie la structure des residus ?
+
+
+
+
 #----------------------------------------------------
 #========== Séparation Homme/Femme ==================
 #----------------------------------------------------
