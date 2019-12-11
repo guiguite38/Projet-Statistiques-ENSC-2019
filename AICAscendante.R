@@ -127,6 +127,10 @@ res0 <- lm(frontal_1L~sexe+preference+age+volume+index+frontal_1R+
           data=matYX)
 
 summary(res0)
+shapiro.test(res0$residuals)
+residus.stud<-rstudent(res0)
+plot(residus.stud,ylim=c(-3.5,3.5))
+abline(h=c(-2,0,2),lty=c(2,1,2))
 
 
 
@@ -281,8 +285,8 @@ summary(resAsc7)
 # Multiple R-squared:  0.4955,	Adjusted R-squared:  0.483 
 # + 1%
 
-
-
+plot(resAsc5$fitted,resAsc5$residuals)
+abline(h=0, col=2)
 residus.stud <- rstudent(resAsc5)
 plot(residus.stud,ylim=c(-3.5,3.5))
 abline(h=c(-2,0,2),lty=c(2,1,2))
